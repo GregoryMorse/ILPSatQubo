@@ -192,7 +192,7 @@ def linprog_to_cplex(c, Aineq, Bineq, Aeq, Beq, x_bounds, labels=None, updfunc=N
         m.parameters.mip.strategy.fpheur = 1 #Apply the feasibility pump heuristic with an emphasis on finding a feasible solution
         #m.parameters.optimalitytarget = 2 #CPX_OPTIMALITYTARGET_FIRSTORDER only for continuous
       import os
-      res = m.solve(LogPeriod=1000000, SearchType='MultiPoint', SolutionLimit=1, TemporalRelaxation='Off', ConflictRefinerOnVariables='On', DefaultInferenceLevel='Extended', MultiPointNumberOfSearchPoints=len(c), **({} if os.name == 'nt' else {'execfile': '/home/gmorse/ibm/ILOG/CPLEX_Studio2211/cpoptimizer/bin/x86-64_linux/cpoptimizer'})) if use_cp else m.solve(log_output=True)
+      res = m.solve(LogPeriod=1000000, SearchType='MultiPoint', SolutionLimit=1, TemporalRelaxation='Off', ConflictRefinerOnVariables='On', DefaultInferenceLevel='Extended', MultiPointNumberOfSearchPoints=len(c), **({} if os.name == 'nt' else {})) if use_cp else m.solve(log_output=True)
       if not use_cp and not res is None and res.is_valid_solution():
         res = [int(round(res.get_value(x))) for x in v]
       elif use_cp and res.get_solve_status() == SOLVE_STATUS_FEASIBLE:

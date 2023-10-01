@@ -519,11 +519,24 @@ def ilp_ideal_qubo_encoding(f, n, subs, coeff=None, nomin=False, funcevals=None)
   else:
     for idx, sub in enumerate(subs):
       updfunc(idx, sub)
+      print(n, nsubs, len(c), len(Aeq), len(Aineq)-d*3)
       res = linprog(c, A_ub=None if len(Aineq) == 0 else Aineq, b_ub=None if len(Bineq) == 0 else Bineq, A_eq=None if len(Aeq) == 0 else Aeq, b_eq=None if len(Beq) == 0 else Beq, bounds=x_bounds, method="highs", integrality=1)
+      if False:
+        print("\setcounter{MaxMatrixCols}{", len(c)-(d-1)*2+2, "}", "\\begin{align*}",
+              "f(a,b,c)=a\\oplus b\\oplus c,", "s(a,b,c)=a\\vee b,",
+              "n=", n, ", ", "n_s=", nsubs, ", ", "|c|=", len(c), ", ", "|A_{eq}|=|B_{eq}|=", len(Aeq), ", ", "|A_{ub}|=|B_{ub}|=", len(Aineq), ",\\\\",
+              "\\min", "\\begin{bmatrix}", " & ".join(str(x) for x in c[:d+2] + ["...", c[d+1+d], "..."] + c[-nsubs:]), "\\end{bmatrix}^\\intercal X,\\\\",            
+              "\\begin{bmatrix}", " & ".join(str(x if  x=="..." else x[0]) for x in x_bounds[:d+2] + ["...", x_bounds[d+1+d], "..."] + x_bounds[-nsubs:]), "\\end{bmatrix}", "\\le X \\le\\\\",
+              "\\begin{bmatrix}", " & ".join(str(x if  x=="..." else x[1]) for x in x_bounds[:d+2] + ["...", x_bounds[d+1+d], "..."] + x_bounds[-nsubs:]), "\\end{bmatrix},\\\\",
+              "\\begin{bmatrix}", "\\\\ ".join([" & ".join(str(z) for z in x[:d+2] + ["...", x[d+1+d], "..."] + x[-nsubs:]) for x in Aeq]), "\\end{bmatrix}", "X=", "\\begin{bmatrix}", "\\\\ ".join(str(x) for x in Beq), "\\end{bmatrix},\\\\",
+              "\\begin{bmatrix}", "\\\\ ".join([" & ".join(str(z) for z in x[:d+2] + ["...", x[d+1+d], "..."] + x[-nsubs:]) for x in Aineq[:-(d-1)*3-nsubs] + [["..."]*len(c)] + Aineq[-nsubs:]]), "\\end{bmatrix}", "X=", "\\begin{bmatrix}", "\\\\ ".join(str(x) for x in Bineq[:-(d-1)*3-nsubs] + ["..."] + Bineq[-nsubs:]), "\\end{bmatrix},\\\\",
+              "X=", "\\begin{bmatrix}", " & ".join(str(x if  x=="..." else np.rint(x).astype(np.int64)) for x in (*res.x[:d+2], "...", res.x[d+1+d], "...", *res.x[-nsubs:])), "\\end{bmatrix}",
+              "\\end{align*}")
       allbest.append(np.rint(res.x[:d+1]).astype(np.int64) if not res.x is None else res.x) #res.success
       if not allbest[-1] is None and (allbest[-1][:d] == 0).all(): allbest[-1][d] = np.sign(allbest[-1][d])
       pfunc(allbest[-1], idx, sub)
   return allbest
+#print(ilp_ideal_qubo_encoding(lambda a, b, c: a ^ b ^ c, 3, subs=[[lambda a, b, c: a | b]])); assert False
 def bitcount(x):
   b = 0
   while x > 0: x&=x-1; b+=1

@@ -1,3 +1,17 @@
+#pip install numpy
+#5 solvers used for substitution searching (scipy is used if substitution functions are known, or simple case detected)
+#optional: pip install scipy
+#optional: pip install gurobipy #must install Gurobi (such as the free or academic version)
+#optional: pip install cplex #must install IBM ILOG CPLEX Optimization Studio (such as the free or academic version)
+#optional: pip install z3-solver
+#optional: pip install glpk
+#for quantum annealer:
+#pip install dimod
+#pip install minorminer
+#pip install dwave-system
+
+NOT, ALWAYSFALSE, ALWAYSTRUE, ALWAYSLEFT, ALWAYSNOTLEFT, ALWAYSRIGHT, ALWAYSNOTRIGHT = 0, 1, 2, 3, 4, 5, 6 #trivial boolean operators
+AND, NAND, OR, NOR, NIMPLY, IMPLY, CNIMPLY, CIMPLY, XNOR, XOR = 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 #non-trivial boolean operators
 def max_one_sat_qubo(clause, varmap, bqm, const):
   i, = clause
   if i > 0: #1-x_i
@@ -724,7 +738,7 @@ def all_nary_count_distributions(n, nsubs):
 #print(len(list(all_nary_count_partitions(13, 3))))
 #print([nary_func_to_num(f, 5) for f in all_nary_count_funcs(5)])
 def num_func_to_formula(val, n):
-  import operator
+  import operator, functools
   from pyeda.inter import espresso_exprs, exprvar #, Not, And, Or, Xor, Xnor, Nand, Nor, Implies
   syms = [exprvar(chr(ord('a')+i)) for i in range(n-1,-1,-1)]
   f = functools.reduce(operator.or_, (functools.reduce(operator.and_, (syms[j] if (i & (1<<j)) != 0 else ~syms[j] for j in range(n))) for i in range(1<<n) if (val & (1<<i)) != 0))
@@ -1027,7 +1041,7 @@ def check_encodings():
       if C is None: continue
       c_0, c_1, c_2, c_3, c_4, c_5, c_6, c_7, c_8, c_9, c_10 = C.tolist()
       assert all([check(s == allbinarysubs[optidx](x_i, x_j, x_k), 1-allternarysat[i](x_i, x_j, x_k), c_0*x_i+c_1*x_j+c_2*x_k+c_3*x_i*x_j+c_4*x_i*x_k+c_5*x_j*x_k+c_6*x_i*s+c_7*x_j*s+c_8*x_k*s+c_9*s+c_10) for x_i, x_j, x_k, s in [(x_i,x_j,x_k,s) for s in (0, 1) for x_i, x_j, x_k in ((0,0,0),(0,0,1),(0,1,0),(0,1,1),(1,0,0),(1,0,1),(1,1,0),(1,1,1))]])
-all_ternary_qubo_encoding(); assert False
+#all_ternary_qubo_encoding(); assert False
 #check_encodings(); assert False
 #print(find_ideal_qubo_encoding(lambda a, b, c: a or b or c, allbinarysubs))
 #print(find_ideal_qubo_encoding(lambda a, b, c: a or b or (1-c), allbinarysubs + altbinarysubs))

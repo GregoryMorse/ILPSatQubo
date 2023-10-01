@@ -523,7 +523,7 @@ def ilp_ideal_qubo_encoding(f, n, subs, coeff=None, nomin=False, funcevals=None)
       res = linprog(c, A_ub=None if len(Aineq) == 0 else Aineq, b_ub=None if len(Bineq) == 0 else Bineq, A_eq=None if len(Aeq) == 0 else Aeq, b_eq=None if len(Beq) == 0 else Beq, bounds=x_bounds, method="highs", integrality=1)
       if False:
         print("\setcounter{MaxMatrixCols}{", len(c)-(d-1)*2+2, "}", "\\begin{align*}",
-              "f(a,b,c)=a\\oplus b\\oplus c,", "s(a,b,c)=a\\vee b,",
+              "f(a,b,c)=a\\oplus b\\oplus c,", "g_0(a,b,c)=a\\vee b,",
               "n=", n, ", ", "n_s=", nsubs, ", ", "|c|=", len(c), ", ", "|A_{eq}|=|B_{eq}|=", len(Aeq), ", ", "|A_{ub}|=|B_{ub}|=", len(Aineq), ",\\\\",
               "\\min", "\\begin{bmatrix}", " & ".join(str(x) for x in c[:d+2] + ["...", c[d+1+d], "..."] + c[-nsubs:]), "\\end{bmatrix}^\\intercal X,\\\\",            
               "\\begin{bmatrix}", " & ".join(str(x if  x=="..." else x[0]) for x in x_bounds[:d+2] + ["...", x_bounds[d+1+d], "..."] + x_bounds[-nsubs:]), "\\end{bmatrix}", "\\le X \\le\\\\",

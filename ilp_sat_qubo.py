@@ -523,12 +523,21 @@ def ilp_ideal_qubo_encoding(f, n, subs, coeff=None, nomin=False, funcevals=None)
       res = linprog(c, A_ub=None if len(Aineq) == 0 else Aineq, b_ub=None if len(Bineq) == 0 else Bineq, A_eq=None if len(Aeq) == 0 else Aeq, b_eq=None if len(Beq) == 0 else Beq, bounds=x_bounds, method="highs", integrality=1)
       if False:
         print("\setcounter{MaxMatrixCols}{", len(c)-(d-1)*2+2, "}", "\\begin{align*}",
-              "f(a,b,c)=a\\oplus b\\oplus c,", "g_0(a,b,c)=a\\vee b,",
+              "f(a,b,c)=a\\oplus b\\oplus c,", "g_0(a,b,c)=a\\vee b,",              
               "n=", n, ", ", "n_s=", nsubs, ", ", "|c|=", len(c), ", ", "|A_{eq}|=|B_{eq}|=", len(Aeq), ", ", "|A_{ub}|=|B_{ub}|=", len(Aineq), ",\\\\",
+              "\\text{labels}=", "\\begin{bmatrix}", " & ".join(
+                ["x_{" + str(i) + "}" + z for i, z in enumerate([chr(ord('a')+i) for i in range(n)] +
+                [chr(ord('a')+i) + chr(ord('a')+j) for i in range(n) for j in range(i+1, n)] +
+                [chr(ord('a')+j) + "s_{" + str(i) + "}" for i in range(nsubs) for j in range(n)] +
+                ["s_{" + str(i) + "}" for i in range(nsubs)] + 
+                ["s_{" + str(i) + "}s_{" + str(j) + "}" for i in range(nsubs) for j in range(i+1, nsubs)]+ [""])] +
+                ["y_0", "...", "z_0", "..."] + ['z_{s_{'+str(i)+'}}' for i in range(nsubs)]), "\\end{bmatrix},\\\\"
               "\\min", "\\begin{bmatrix}", " & ".join(str(x) for x in c[:d+2] + ["...", c[d+1+d], "..."] + c[-nsubs:]), "\\end{bmatrix}^\\intercal X,\\\\",            
               "\\begin{bmatrix}", " & ".join(str(x if  x=="..." else x[0]) for x in x_bounds[:d+2] + ["...", x_bounds[d+1+d], "..."] + x_bounds[-nsubs:]), "\\end{bmatrix}", "\\le X \\le\\\\",
               "\\begin{bmatrix}", " & ".join(str(x if  x=="..." else x[1]) for x in x_bounds[:d+2] + ["...", x_bounds[d+1+d], "..."] + x_bounds[-nsubs:]), "\\end{bmatrix},\\\\",
+              "\\textcolor{gray}{\\begin{matrix}", "\\\\ ".join(["g_0(" + ",".join(str(z) for z in x) + ")" for x in itertools.product((0,1), repeat=n) if 1 - f(*x) == 0]), "\\end{matrix}}",
               "\\begin{bmatrix}", "\\\\ ".join([" & ".join(str(z) for z in x[:d+2] + ["...", x[d+1+d], "..."] + x[-nsubs:]) for x in Aeq]), "\\end{bmatrix}", "X=", "\\begin{bmatrix}", "\\\\ ".join(str(x) for x in Beq), "\\end{bmatrix},\\\\",
+              "\\textcolor{gray}{\\begin{matrix}", "\\\\ ".join([("" if all(y == 0 for y in badsub) else "1-") + "g_0(" + ",".join(str(z) for z in x) + ")" for x in itertools.product((0,1), repeat=n) for badsub in itertools.product((0,1), repeat=nsubs) if f(*x) == 0 or not all(y == 0 for y in badsub)] + ["-x_0-y_0\le 0", "x_0-y_0\le 0", "y_0-Cz_0\le 0", "...", "y_{\\{s_0\\}}-(n+n_s)z_{s_0}\le 0"]), "\\end{matrix}}",
               "\\begin{bmatrix}", "\\\\ ".join([" & ".join(str(z) for z in x[:d+2] + ["...", x[d+1+d], "..."] + x[-nsubs:]) for x in Aineq[:-(d-1)*3-nsubs] + [["..."]*len(c)] + Aineq[-nsubs:]]), "\\end{bmatrix}", "X=", "\\begin{bmatrix}", "\\\\ ".join(str(x) for x in Bineq[:-(d-1)*3-nsubs] + ["..."] + Bineq[-nsubs:]), "\\end{bmatrix},\\\\",
               "X=", "\\begin{bmatrix}", " & ".join(str(x if  x=="..." else np.rint(x).astype(np.int64)) for x in (*res.x[:d+2], "...", res.x[d+1+d], "...", *res.x[-nsubs:])), "\\end{bmatrix}",
               "\\end{align*}")

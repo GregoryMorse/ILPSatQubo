@@ -20,8 +20,6 @@ We present an asymptotic improvement in the number of variables ($n + m\lfloor\l
 | File | Description |
 |---|---|
 | `ilp_sat_qubo.py` | Main implementation: ILP encoders, QUBO construction, solver interfaces, benchmarking, and plot generation |
-| `settrie.pyx` | Cython extension implementing a Set-Trie data structure used for efficient clause-group covering |
-| `makesettrie.pyx` | Build script for compiling the `settrie` Cython extension |
 
 ---
 
@@ -82,13 +80,13 @@ pip install dimod minorminer dwave-system dwave-qbsolv
 
 A D-Wave Leap token must be set in the environment variable `DWAVE_API_TOKEN`.
 
-### Cython Extension (optional, improves clause-group detection)
+### Set-Trie (optional, required for clause-group covering in `max_ksat_to_qubo`)
 
 ```
-python makesettrie.py build_ext --inplace
+pip install pysettrie
 ```
 
-Requires a C++ compiler and `Cython`.
+`pysettrie` is a Cython-accelerated set-trie library maintained by the same author at [github.com/GregoryMorse/pysettrie](https://github.com/GregoryMorse/pysettrie). The local `settrie.pyx` / `makesettrie.pyx` sources in this repository are the legacy predecessor and are no longer needed.
 
 ---
 
@@ -98,6 +96,7 @@ Requires a C++ compiler and `Cython`.
 git clone https://github.com/GregoryMorse/ILPSatQubo.git
 cd ILPSatQubo
 pip install numpy scipy          # minimum required packages
+# (optional) pip install pysettrie           # set-trie for clause-group covering
 # (optional) pip install gurobipy docplex z3-solver glpk
 # (optional) pip install dimod minorminer dwave-system dwave-qbsolv
 ```

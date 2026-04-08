@@ -1,0 +1,21 @@
+# ── Core (required) ──────────────────────────────────────────────────────────
+numpy
+scipy
+
+# ── Set-Trie — clause-group covering in max_ksat_to_qubo (recommended) ───────
+pysettrie
+
+# ── Optional MIP/CP solvers ───────────────────────────────────────────────────
+# Uncomment the solver(s) you have installed.
+# A free academic licence is available for both Gurobi and CPLEX.
+#gurobipy
+#docplex          # IBM ILOG CPLEX Python API (also requires CPLEX studio)
+#z3-solver
+#glpk
+
+# ── Quantum annealing — D-Wave experiments (optional) ────────────────────────
+# Requires a D-Wave Leap account; set DWAVE_API_TOKEN in your environment.
+#dimod
+#minorminer
+#dwave-system
+#dwave-qbsolv

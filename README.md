@@ -1,5 +1,9 @@
 # ILPSatQubo
 
+[![DOI](https://img.shields.io/badge/DOI-10.1145%2F3631908.3631929-blue.svg)](https://doi.org/10.1145/3631908.3631929)
+[![Journal](https://img.shields.io/badge/Journal-ACM%20ICACS%202023-00599C.svg)](https://www.icacs.org/2023.html)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 **Official code supplement for the published conference paper:**  
 *On Optimal QUBO Encoding of Boolean Logic, (Max-)3-SAT and (Max-)k-SAT with Integer Programming*  
 Gregory Morse, Tamás Kozsik  
@@ -12,6 +16,19 @@ Gregory Morse — [gregory.morse@live.com](mailto:gregory.morse@live.com)
 ## Abstract
 
 We present an asymptotic improvement in the number of variables ($n + m\lfloor\log_2(k-1)\rfloor$) required for state-of-the-art formulation of (max-)k-SAT problems when encoded as a Quadratic Unconstrained Binary Optimization (QUBO) problem. We further show a variable reduction technique for (max-)3-SAT formulae which achieves the optimal number of substitution variables. We show optimality empirically by presenting an Integer Linear Programming (ILP) construction for arbitrary Boolean formulas. We show how various goals can be encoded, and this model can be generalised to searching for arbitrary substitution variable functions. Lastly, we show the optimal high-order substitution reduction in cubic QUBO equations which has smaller coefficients than the typical construction used.
+
+---
+
+## Conference Presentation
+
+This work was presented at the **International Conference on Algorithms, Computing and Systems (ICACS) 2023**.
+
+- **Authors:** Gregory Morse and Tamás Kozsik
+- **Paper:** *On Optimal QUBO Encoding of Boolean Logic, (Max-)3-SAT and (Max-)k-SAT with Integer Programming*
+- **Conference:** ICACS 2023
+- **Location:** Larissa, Greece (conference changed to virtual format)
+- **Presentation time:** October 25, 2023, 15:00
+- **Conference page:** https://www.icacs.org/2023.html
 
 ---
 
